@@ -62,25 +62,6 @@ const token = new SkyWayAuthToken({
   // video.attach(localVideo);
   // await localVideo.play();
 
-  const mediaStream = await navigator.mediaDevices.getUserMedia({
-    audio: true,
-  });
-  
-  // もとのAudiotrackを消して EffectをかけたAudioTrackを追加してMediaStreamへ
-  const micAudio = new Tone.UserMedia();
-  await micAudio.open();
-  const shifter = new Tone.PitchShift(myVoicePitch);
-  micAudio.connect(shifter);
-  setPitchShifter(shifter);
-  
-  const effectedDest = Tone.context.createMediaStreamDestination();
-  shifter.connect(effectedDest);
-  
-  const oldTrack = mediaStream.getAudioTracks()[0];
-  mediaStream.removeTrack(oldTrack);
-  const effectedTrack = effectedDest.stream.getAudioTracks()[0];
-  mediaStream.addTrack(effectedTrack);
-  audioRef.current!.srcObject = new MediaStream(mediaStream.getAudioTracks());
   joinButton.onclick = async () => {
     if (roomNameInput.value === '') return;
 
@@ -114,11 +95,10 @@ const token = new SkyWayAuthToken({
             // newMedia.autoplay = true;
             // break;
           case 'audio':
-            newMedia = memberDiv.getElementsByTagName("audio").item(0) as HTMLAudioElement;
-            // newMedia = document.createElement('audio');
-            // newMedia.controls = false;
-            // newMedia.autoplay = true;
-            // newMedia.id = "audio-check";
+            newMedia = document.createElement('audio');
+            newMedia.controls = false;
+            newMedia.autoplay = true;
+            newMedia.id = "audio-check";
             break;
           default:
             return;
